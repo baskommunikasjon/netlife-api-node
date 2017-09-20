@@ -8,7 +8,7 @@ A package for easy access to Netlifs API's.
   - [SMS-API](#sms-api)
 
 ## Install
-Run `npm install [URL]` in your console to install this package.
+Run `npm install netlife-api` in your console to install this package.
 
 ---
 
@@ -19,7 +19,7 @@ Background documentation can be [obtained here](https://secure.bringcrm.no/api/s
 
 You have to authorize before using any other methods in this API.
 ```js
-const netlife = require('bdn-api');
+const netlife = require('netlife-api');
 
 netlife.sms.auth({
     xBdnKey: '<x-bdn-key>',

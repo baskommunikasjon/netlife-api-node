@@ -1,6 +1,6 @@
 {
   "name": "netlife-api",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A simple to use package for Netlifes many API end-points.",
   "main": "index.js",
   "scripts": {
@@ -8,16 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/{your-github-user}/{your-github-repository}.git"
+    "url": "git+https://github.com/netlifedialog/netlife-api-node.git"
   },
   "author": "Henrik Brath Gundersen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/{your-github-user}/{your-github-repository}/issues"
+    "url": "https://github.com/netlifedialog/netlife-api-node/issues"
   },
-  "homepage": "https://github.com/{your-github-user}/{your-github-repository}#readme",
+  "homepage": "https://github.com/netlifedialog/netlife-api-node#readme",
   "dependencies": {
-    "dotenv": "^4.0.0",
     "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "dotenv": "^4.0.0"
   }
 }
