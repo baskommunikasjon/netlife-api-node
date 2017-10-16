@@ -25,13 +25,13 @@
  */
 
 /*
- *  sms-web-api.js
+ *  sms-web.js
  *  Background docs: https://secure.bringcrm.no/api/sms/v1
  */
 
 const _ = require('lodash');
 
-class SmsWebApi {
+class SmsWeb {
 
   /**
    * Constructor
@@ -65,21 +65,26 @@ class SmsWebApi {
    * Saves the API key and account for use in other methods.
    * @param {object} credentials
    */
-  auth(credentials = {}) {
-    if (!credentials.apiKey && !credentials.apiAccount) {
-      return console.error('Auth: [apiKey] and [apiAccount] is missing.\n');
+  auth(credentials) {
+    if (_.isObjectLike(credentials)) {
+      if (!credentials.apiKey && !credentials.apiAccount) {
+        return console.error('Auth: [apiKey] and [apiAccount] is missing.\n');
+      }
+
+      if (!credentials.apiKey) {
+        return console.error('Auth: [apiKey] is missing.\n');
+      }
+
+      if (!credentials.apiAccount) {
+        return console.error('Auth: [apiAccount] is missing.\n');
+      }
+
+      this.apiKey = credentials.apiKey;
+      this.apiAccount = credentials.apiAccount;
+      return;
     }
 
-    if (!credentials.apiKey) {
-      return console.error('Auth: [apiKey] is missing.\n');
-    }
-
-    if (!credentials.apiAccount) {
-      return console.error('Auth: [apiAccount] is missing.\n');
-    }
-
-    this.apiKey = credentials.apiKey;
-    this.apiAccount = credentials.apiAccount;
+    return console.error('Auth: You need to provide a object with auth credentials.\n');
   };
 
   /**
@@ -295,4 +300,4 @@ class SmsWebApi {
   };
 }
 
-module.exports = new SmsWebApi;
+module.exports = new SmsWeb;

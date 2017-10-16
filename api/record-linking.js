@@ -25,15 +25,15 @@
  */
 
 /*
- *  record-linking-api.js
+ *  record-linking.js
  *  Background docs: https://api.bringcrm.no/recordlinking/v2/
  */
 
-class RecordLinkingApi {
+class RecordLinking {
 
   /**
    * Constructor
-   * @public
+   * @constructor
    */
   constructor() {
     this.apiKey = null;
@@ -59,4 +59,4 @@ class RecordLinkingApi {
   }
 }
 
-module.exports = new RecordLinkingApi;
+module.exports = new RecordLinking;
