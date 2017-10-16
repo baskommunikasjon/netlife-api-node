@@ -29,11 +29,13 @@
  *  Background docs: https://secure.bringcrm.no/api/sms/v1
  */
 
+const _ = require('lodash');
+
 class SmsWebApi {
 
   /**
    * Constructor
-   * @public
+   * @constructor
    */
   constructor() {
     this.apiKey = null;
@@ -61,7 +63,7 @@ class SmsWebApi {
   /**
    * Auth
    * Saves the API key and account for use in other methods.
-   * @param credentials
+   * @param {object} credentials
    */
   auth(credentials = {}) {
     if (!credentials.apiKey && !credentials.apiAccount) {
@@ -83,8 +85,8 @@ class SmsWebApi {
   /**
    * SendSingle
    * Send SMS to a single recipient.
-   * @param options
-   * @param callback
+   * @param {object} options
+   * @param {function} callback
    */
   sendSingle(options = {}, callback) {
     if (!this.authorized()) {
@@ -149,8 +151,8 @@ class SmsWebApi {
   /**
    * SendBulk
    * Send bulk SMS to many recipients.
-   * @param options
-   * @param callback
+   * @param {object} options
+   * @param {function} callback
    */
   sendBulk(options = {}, callback) {
     if (!this.authorized()) {
@@ -229,8 +231,8 @@ class SmsWebApi {
   /**
    * GetShipment
    * Returns information about a shipment
-   * @param shipmentId
-   * @param callback
+   * @param {string} shipmentId
+   * @param {function} callback
    */
   getShipment(shipmentId, callback) {
     if (!this.authorized()) {
@@ -238,7 +240,7 @@ class SmsWebApi {
     }
 
     // Check if call has an shipment ID.
-    if (!shipmentId) {
+    if (!_.isString(shipmentId)) {
       return console.error(this.messages.getShipment.shipmentId);
     }
 
@@ -284,8 +286,8 @@ class SmsWebApi {
    * MergeOptions
    * Merges the default options with options sent with the method.
    * @private
-   * @param defaultOptions
-   * @param options
+   * @param {object} defaultOptions
+   * @param {object} options
    * @return {Object}
    */
   mergeOptions(defaultOptions = {}, options = {}) {
