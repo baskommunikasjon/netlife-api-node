@@ -1,3 +1,29 @@
+/**
+ * @license
+ * MIT License
+
+ * Copyright (c) 2017 Netlife Gruppen AS
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 /*
  *  sms-web-api.js
  *  Background docs: https://secure.bringcrm.no/api/sms/v1
@@ -10,8 +36,8 @@ class SmsWebApi {
      * @public
      */
     constructor() {
-        this.xBdnKey = null;
-        this.xBdnAccount = null;
+        this.apiKey = null;
+        this.apiAccount = null;
 
         this.messages = {
             unauthorized: 'You have to authorize before using this API method.\nUse the `auth()` method.\n\n',
@@ -38,20 +64,20 @@ class SmsWebApi {
      * @param credentials
      */
     auth(credentials = {}) {
-        if (!credentials.xBdnKey && !credentials.xBdnAccount) {
-            return console.error('[xBdnKey] and [xBdnAccount] is missing.\n');
+        if (!credentials.apiKey && !credentials.apiAccount) {
+            return console.error('[apiKey] and [apiAccount] is missing.\n');
         }
 
-        if (!credentials.xBdnKey) {
-            return console.error('[xBdnKey] is missing.\n');
+        if (!credentials.apiKey) {
+            return console.error('[apiKey] is missing.\n');
         }
 
-        if (!credentials.xBdnAccount) {
-            return console.error('[xBdnAccount] is missing.\n');
+        if (!credentials.apiAccount) {
+            return console.error('[apiAccount] is missing.\n');
         }
 
-        this.xBdnKey = credentials.xBdnKey;
-        this.xBdnAccount = credentials.xBdnAccount;
+        this.apiKey = credentials.apiKey;
+        this.apiAccount = credentials.apiAccount;
     };
 
     /**
@@ -92,8 +118,8 @@ class SmsWebApi {
             headers: {
                 'cache-control': 'no-cache',
                 'content-type': 'application/json',
-                'x-bdn-account': this.xBdnAccount,
-                'x-bdn-key': this.xBdnKey,
+                'x-bdn-account': this.apiAccount,
+                'x-bdn-key': this.apiKey,
             },
             body: {
                 PhoneNumber: options.recipient,
@@ -165,8 +191,8 @@ class SmsWebApi {
             headers: {
                 'cache-control': 'no-cache',
                 'content-type': 'application/json',
-                'x-bdn-account': this.xBdnAccount,
-                'x-bdn-key': this.xBdnKey,
+                'x-bdn-account': this.apiAccount,
+                'x-bdn-key': this.apiKey,
             },
             body: {
                 Template: {
@@ -220,8 +246,8 @@ class SmsWebApi {
             qs: {shipmentId: shipmentId},
             headers: {
                 'cache-control': 'no-cache',
-                'x-bdn-account': this.xBdnAccount,
-                'x-bdn-key': this.xBdnKey,
+                'x-bdn-account': this.apiAccount,
+                'x-bdn-key': this.apiKey,
             }
         }, (error, response, body) => {
             if (err) {
@@ -244,7 +270,7 @@ class SmsWebApi {
      * @return {boolean}
      */
     authorized() {
-        return !!(this.xBdnKey && this.xBdnAccount);
+        return !!(this.apiKey && this.apiAccount);
     };
 
     /**
