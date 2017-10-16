@@ -1,5 +1,7 @@
 # Netlife-API-node
 
+[![npm version](https://badge.fury.io/js/netlife-api.svg)](https://badge.fury.io/js/netlife-api)
+
 A package for easy access to Netlifs API's.
 
 ## Table of contents
@@ -8,7 +10,7 @@ A package for easy access to Netlifs API's.
   - [SMS-API](#sms-api)
 
 ## Install
-Run `npm install netlife-api` in your console to install this package.
+Run `npm install netlife-api --save` in your console to install this package.
 
 ---
 
@@ -22,8 +24,8 @@ You have to authorize before using any other methods in this API.
 const netlife = require('netlife-api');
 
 netlife.sms.auth({
-    xBdnKey: '<x-bdn-key>',
-    xBdnAccount: '<x-bdn-account>',
+    apiKey: '<x-bdn-key>',
+    apiAccount: '<x-bdn-account>',
 });
 ```
 
@@ -72,10 +74,10 @@ bdnAPI.sms.sendBulk({
 
 | Property           | Type      | Default                | Details                                                                                                                            |
 |--------------------|-----------|------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `recipients`       | Array     | `[]`                   | Mobile number to recipients with country code. (Ex. +4799999999).                                                                  |
+| `recipients`       | Array     | `[]`                   | Array with mobile numbers to recipients with country code. (Ex. `['+4799999999', '+4712345678']`).                                 |
 | `from`             | String    | `2262`                 | Alphanumeric sender name [0-9] [A-Z]. Sender name does not support whitespace.                                                     |
 | `message`          | String    | `null`                 | The text message to send.                                                                                                          |
-| `sendTime`         | ISOString | `Date().toISOstring()` | The date and time you want the SMS to be sent. (Ex. '2017-09-01T12:30:00.000Z'). Default option will send the bulk SMS right away. |
+| `sendTime`         | ISOString | `Date().toISOstring()` | The date and time you want the SMS to be sent. (Ex. `2017-09-01T12:30:00.000Z). Default option will send the bulk SMS right away. |
 | `removeDuplicates` | Boolean   | `true`                 | Whether to remove duplicate recipients. If set to `false` a recipient may get the SMS more then once.                              |
 
 
@@ -85,4 +87,4 @@ netlife.sms.getShipment(shipmentId, (data) => {
   console.log(data);
 });
 ```
----
+---`
