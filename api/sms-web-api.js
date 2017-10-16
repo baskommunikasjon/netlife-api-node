@@ -65,15 +65,15 @@ class SmsWebApi {
      */
     auth(credentials = {}) {
         if (!credentials.apiKey && !credentials.apiAccount) {
-            return console.error('[apiKey] and [apiAccount] is missing.\n');
+            return console.error('Auth: [apiKey] and [apiAccount] is missing.\n');
         }
 
         if (!credentials.apiKey) {
-            return console.error('[apiKey] is missing.\n');
+            return console.error('Auth: [apiKey] is missing.\n');
         }
 
         if (!credentials.apiAccount) {
-            return console.error('[apiAccount] is missing.\n');
+            return console.error('Auth: [apiAccount] is missing.\n');
         }
 
         this.apiKey = credentials.apiKey;
