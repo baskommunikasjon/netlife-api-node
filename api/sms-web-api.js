@@ -128,19 +128,21 @@ class SmsWebApi {
       },
       json: true
     }, (err, response, body) => {
-      if (err) {
-        return callback(err);
-      }
+      if (_.isFunction(callback)) {
+        if (err) {
+          return callback(err);
+        }
 
-      if (response.statusCode === 401) {
-        return callback(this.messages.wrongCredentials);
-      }
+        if (response.statusCode === 401) {
+          return callback(this.messages.wrongCredentials);
+        }
 
-      if (response.statusCode !== 200) {
-        return callback(this.messages.sendSingle.smsFailed);
-      }
+        if (response.statusCode !== 200) {
+          return callback(this.messages.sendSingle.smsFailed);
+        }
 
-      return callback(null);
+        return callback(null);
+      }
     });
   };
 
@@ -205,19 +207,21 @@ class SmsWebApi {
       },
       json: true
     }, (err, response, body) => {
-      if (err) {
-        return callback(err, null);
-      }
+      if (_.isFunction(callback)) {
+        if (err) {
+          return callback(err, null);
+        }
 
-      if (response.statusCode === 401) {
-        return callback(this.messages.wrongCredentials, null);
-      }
+        if (response.statusCode === 401) {
+          return callback(this.messages.wrongCredentials, null);
+        }
 
-      if (response.statusCode !== 200) {
-        return callback(this.messages.sendBulk.smsFailed, null);
-      }
+        if (response.statusCode !== 200) {
+          return callback(this.messages.sendBulk.smsFailed, null);
+        }
 
-      return callback(null, body.ShipmentId);
+        return callback(null, body.ShipmentId);
+      }
     });
 
   };
@@ -250,15 +254,18 @@ class SmsWebApi {
         'x-bdn-key': this.apiKey,
       }
     }, (error, response, body) => {
-      if (err) {
-        return callback(err, null);
-      }
+      if (_.isFunction(callback)) {
+        if (err) {
+          return callback(err, null);
+        }
 
-      if (response.statusCode === 401) {
-        return callback(this.messages.wrongCredentials, null);
-      }
+        if (response.statusCode === 401) {
+          return callback(this.messages.wrongCredentials, null);
+        }
 
-      return callback(null, body);
+
+        return callback(null, body);
+      }
     });
 
   }
