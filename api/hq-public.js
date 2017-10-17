@@ -30,6 +30,8 @@
  */
 
 const _ = require('lodash');
+const callbackHandler = require('../lib/callback-handler');
+
 
 class hqPublic {
 
@@ -54,30 +56,34 @@ class hqPublic {
       getContactByContactId: {
         contactId: 'The method `getContactByContactId()` requires an ContactId. Add this to the parameters.\n\n',
       },
+      updateContact: {
+        contactObject: 'The method `updateContact()` requires a contactObject. Add this to the parameters.\n\n',
+        contactId: 'The method `updateContact()` requires that `contactId` is not empty, null or 0.\n\n',
+      },
     }
   }
 
   /**
    * Auth
    * Saves the API key, account and domain for use in other methods.
-   * @param credentials
+   * @param {Object} credentials
    */
   auth(credentials) {
     if (_.isObjectLike(credentials)) {
       if (!credentials.apiKey && !credentials.apiAccount && !credentials.apiDomain) {
-        return console.error('Auth: [apiKey], [apiAccount] and [apiDomain] is missing.\n');
+        throw new Error('Auth: [apiKey], [apiAccount] and [apiDomain] is missing.');
       }
 
       if (!credentials.apiKey) {
-        return console.error('Auth: Auth: [apiKey] is missing.\n');
+        throw new Error('Auth: Auth: [apiKey] is missing.');
       }
 
       if (!credentials.apiAccount) {
-        return console.error('[Auth: apiAccount] is missing.\n');
+        throw new Error('[Auth: apiAccount] is missing.');
       }
 
       if (!credentials.apiDomain) {
-        return console.error('Auth: [apiDomain] is missing.\n');
+        throw new Error('Auth: [apiDomain] is missing.');
       }
 
       this.apiKey = credentials.apiKey;
@@ -86,22 +92,23 @@ class hqPublic {
       return;
     }
 
-    return console.error('Auth: You need to provide a object with auth credentials.\n');
+    throw new Error('Auth: You need to provide a object with auth credentials.');
   };
 
   /**
    * GetContactsByEmail
    * Get contacts by e-mail address.
-   * @param {string} email
-   * @param {function} callback
+   * @param {String} email
+   * @param {Function} callback
+   * @callback(error, contacts)
    */
   getContactsByEmail(email, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      return callbackHandler(callback, [this.messages.unauthorized, null]);
     }
 
     if (!_.isString(email)) {
-      return console.error(this.messages.getContactsByEmail.email);
+      return callbackHandler(callback, [this.messages.getContactsByEmail.email, null]);
     }
 
     const request = require('request');
@@ -116,17 +123,15 @@ class hqPublic {
         'x-bdn-domain': this.apiDomain,
       }
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          return callback(err, null);
-        }
-
-        if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials, null);
-        }
-
-        return callback(null, JSON.parse(body));
+      if (err) {
+        return callbackHandler(callback, [err, null]);
       }
+
+      if (response.statusCode === 401) {
+        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+      }
+
+      return callbackHandler(callback, [null, JSON.parse(body)]);
     });
 
   }
@@ -134,17 +139,18 @@ class hqPublic {
   /**
    * GetContactsByEmail
    * Get contacts by mobile number.
-   * @param {string || number} mobile
-   * @param {function} callback
+   * @param {String || Number} mobile
+   * @param {Function} callback
+   * @callback(error, contacts)
    */
   getContactsByMobile(mobile, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      return callbackHandler(callback, [this.messages.unauthorized, null]);
     }
 
     // Well accept the number or string as type of `mobile`
     if (!_.isString(mobile) && !_.isNumber(mobile)) {
-      return console.error(this.messages.getContactsByMobile.mobile);
+      return callbackHandler(callback, [this.messages.getContactsByMobile.mobile, null]);
     }
 
     const request = require('request');
@@ -159,17 +165,15 @@ class hqPublic {
         'x-bdn-domain': this.apiDomain,
       }
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          return callback(err, null);
-        }
-
-        if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials, null);
-        }
-
-        return callback(null, JSON.parse(body));
+      if (err) {
+        return callbackHandler(callback, [err, null]);
       }
+
+      if (response.statusCode === 401) {
+        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+      }
+
+      return callbackHandler(callback, [null, JSON.parse(body)]);
     });
 
   }
@@ -177,17 +181,20 @@ class hqPublic {
   /**
    * GetContactByContactId
    * Get contacts by contactId.
-   * @param {string || number} contactId
-   * @param {function} callback
+   * @param {String || Number} contactId
+   * @param {Function} callback
+   * @callback(error, contact)
    */
   getContactByContactId(contactId, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized), null);
+      throw new Error(this.messages.unauthorized);
     }
 
-    // Well accept the number or string as type of `contactId`
+    // We'll accept the number or string as type of `contactId`
     if (!_.isString(contactId) && !_.isNumber(contactId)) {
-      return console.error(this.messages.getContactByContactId.contactId);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.getContactByContactId.contactId), null);
+      throw new Error(this.messages.getContactByContactId.contactId);
     }
 
     const request = require('request');
@@ -202,26 +209,66 @@ class hqPublic {
         'x-bdn-domain': this.apiDomain,
       }
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          return callback(err, null);
-        }
-
-        if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials, null);
-        }
-
-        return callback(null, JSON.parse(body));
+      if (err) {
+        if (_.isFunction(callback)) return callback(new Error(err), null);
+        throw new Error(err);
       }
+
+      if (response.statusCode === 401) {
+        if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials), null);
+        throw new Error(this.messages.wrongCredentials);
+      }
+
+      const contact = JSON.parse(body);
+
+      // Check if the API is giving us an empty copy of an customer object
+      // (this happens when the API can't find a customer by id).
+      if (contact.ContactId === 0) {
+        if (_.isFunction(callback)) return callback(null, {})
+      }
+
+      if (_.isFunction(callback)) return callback(null, contact);
     });
 
+  }
+
+  /**
+   * UpdateContact
+   * Updates contact if contactId is passed to the method - creates new contact otherwise
+   * @param {Object} contactObject
+   * @param {Function} callback
+   * @callback(error)
+   */
+  updateContact(contactObject, callback) {
+    if (!this.authorized()) {
+      return callbackHandler(callback, [this.messages.unauthorized]);
+    }
+
+    // We'll only accept object for `contactObject`
+    if (!_.isObjectLike(contactObject)) {
+      return callbackHandler(callback, [this.messages.updateContact.contactObject]);
+    }
+
+    if (_.isUndefined(contactObject.contactId) || _.isNull(contactObject.contactId) || contactObject.contactId === 0) {
+      return callbackHandler(callback, [this.messages.updateContact.contactId]);
+    }
+
+    this.getContactByContactId(contactObject.contactId, (err, contact) => {
+      if (err) {
+        return callbackHandler(callback, [err]);
+      }
+
+      //TODO: Here goes the update PUT request.
+
+      return callbackHandler(callback, [null]);
+    });
   }
 
   /**
    * Authorized
    * Returns if API key and account has been set.
    * @private
-   * @return {boolean}
+   * @return {Boolean}
    */
   authorized() {
     return !!(this.apiKey && this.apiAccount && this.apiDomain);
