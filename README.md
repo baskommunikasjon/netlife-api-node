@@ -21,5 +21,5 @@ This wrapper aims to include all of Netlifes many API end-points in a more intui
 Well'll add more API's and methods along the way.
 
 Read the docs of the included API's:
-- [SMS API](blob/development/sms-web.md)
-- [HQ-Public API](blob/development/hq-public.md)
+- [SMS API](docs/sms-web.md)
+- [HQ-Public API](docs/hq-public.md)
