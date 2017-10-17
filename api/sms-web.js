@@ -68,15 +68,15 @@ class SmsWeb {
   auth(credentials) {
     if (_.isObjectLike(credentials)) {
       if (!credentials.apiKey && !credentials.apiAccount) {
-        return console.error('Auth: [apiKey] and [apiAccount] is missing.\n');
+        throw new Error('Auth: [apiKey] and [apiAccount] is missing.');
       }
 
       if (!credentials.apiKey) {
-        return console.error('Auth: [apiKey] is missing.\n');
+        throw new Error('Auth: [apiKey] is missing.');
       }
 
       if (!credentials.apiAccount) {
-        return console.error('Auth: [apiAccount] is missing.\n');
+        throw new Error('Auth: [apiAccount] is missing.');
       }
 
       this.apiKey = credentials.apiKey;
@@ -84,7 +84,7 @@ class SmsWeb {
       return;
     }
 
-    return console.error('Auth: You need to provide a object with auth credentials.\n');
+    throw new Error('Auth: You need to provide a object with auth credentials.');
   };
 
   /**
@@ -92,10 +92,12 @@ class SmsWeb {
    * Send SMS to a single recipient.
    * @param {object} options
    * @param {function} callback
+   * @callback(error)
    */
   sendSingle(options = {}, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized));
+      throw new Error(this.messages.unauthorized);
     }
 
     const defaultOptions = {
@@ -109,12 +111,14 @@ class SmsWeb {
 
     // Check if options has a recipient.
     if (!options.recipient) {
-      return console.error(this.messages.sendSingle.recipient);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.recipient));
+      throw new Error(this.messages.sendSingle.recipient);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      return console.error(this.messages.sendSingle.message);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.message));
+      throw new Error(this.messages.sendSingle.message);
     }
 
     const request = require('request');
@@ -135,21 +139,22 @@ class SmsWeb {
       },
       json: true
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          return callback(err);
-        }
-
-        if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials);
-        }
-
-        if (response.statusCode !== 200) {
-          return callback(this.messages.sendSingle.smsFailed);
-        }
-
-        return callback(null);
+      if (err) {
+        if (_.isFunction(callback)) return callback(new Error(err));
+        throw new Error(err);
       }
+
+      if (response.statusCode === 401) {
+        if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials));
+        throw new Error(this.messages.wrongCredentials);
+      }
+
+      if (response.statusCode !== 200) {
+        if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.smsFailed));
+        throw new Error(this.messages.sendSingle.smsFailed);
+      }
+
+      if (_.isFunction(callback)) return callback(null);
     });
   };
 
@@ -158,10 +163,12 @@ class SmsWeb {
    * Send bulk SMS to many recipients.
    * @param {object} options
    * @param {function} callback
+   * @callback(error, shipmentId)
    */
   sendBulk(options = {}, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized), null);
+      throw new Error(this.messages.unauthorized);
     }
 
     const defaultOptions = {
@@ -184,12 +191,14 @@ class SmsWeb {
 
     // Check if options has recipients.
     if (!options.recipients.length) {
-      return console.error(this.messages.sendBulk.recipients);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.recipients), null);
+      throw new Error(this.messages.sendBulk.recipients);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      return console.error(this.messages.sendBulk.message);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.message), null);
+      throw new Error(this.messages.sendBulk.message);
     }
 
     const request = require("request");
@@ -214,21 +223,22 @@ class SmsWeb {
       },
       json: true
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          return callback(err, null);
-        }
-
-        if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials, null);
-        }
-
-        if (response.statusCode !== 200) {
-          return callback(this.messages.sendBulk.smsFailed, null);
-        }
-
-        return callback(null, body.ShipmentId);
+      if (err) {
+        if (_.isFunction(callback)) return callback(new Error(err), null);
+        throw new Error(err);
       }
+
+      if (response.statusCode === 401) {
+        if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials), null);
+        throw new Error(this.messages.wrongCredentials);
+      }
+
+      if (response.statusCode !== 200) {
+        if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.smsFailed), null);
+        throw new Error(this.messages.sendBulk.smsFailed);
+      }
+
+      if (_.isFunction(callback)) return callback(null, body.ShipmentId);
     });
 
   };
@@ -238,15 +248,18 @@ class SmsWeb {
    * Returns information about a shipment
    * @param {string} shipmentId
    * @param {function} callback
+   * @callback(error, shipmentData)
    */
   getShipment(shipmentId, callback) {
     if (!this.authorized()) {
-      return console.error(this.messages.unauthorized);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized), null);
+      throw new Error(this.messages.unauthorized);
     }
 
     // Check if call has an shipment ID.
     if (!_.isString(shipmentId)) {
-      return console.error(this.messages.getShipment.shipmentId);
+      if (_.isFunction(callback)) return callback(new Error(this.messages.getShipment.shipmentId), null);
+      throw new Error(this.messages.getShipment.shipmentId);
     }
 
     const request = require('request');
@@ -260,18 +273,19 @@ class SmsWeb {
         'x-bdn-account': this.apiAccount,
         'x-bdn-key': this.apiKey,
       }
-    }, (error, response, body) => {
+    }, (err, response, body) => {
       if (_.isFunction(callback)) {
         if (err) {
-          return callback(err, null);
+          if (_.isFunction(callback)) return callback(new Error(err), null);
+          throw new Error(err, null);
         }
 
         if (response.statusCode === 401) {
-          return callback(this.messages.wrongCredentials, null);
+          if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials), null);
+          throw new Error(this.messages.wrongCredentials);
         }
 
-
-        return callback(null, body);
+        if (_.isFunction(callback)) return callback(null, body);
       }
     });
 
