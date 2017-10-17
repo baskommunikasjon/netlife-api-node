@@ -1,6 +1,8 @@
 # Netlife-API-node
 
 [![npm version](https://badge.fury.io/js/netlife-api.svg)](https://badge.fury.io/js/netlife-api)
+[![dependencies Status](https://david-dm.org/netlifedialog/netlife-api-node/status.svg)](https://david-dm.org/netlifedialog/netlife-api-node)
+[![devDependencies Status](https://david-dm.org/netlifedialog/netlife-api-node/dev-status.svg)](https://david-dm.org/netlifedialog/netlife-api-node?type=dev)
 
 A package for easy access to Netlifs API's.
 
