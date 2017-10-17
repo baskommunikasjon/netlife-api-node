@@ -30,6 +30,7 @@
  */
 
 const _ = require('lodash');
+const callbackHandler = require('../lib/callback-handler');
 
 class SmsWeb {
 
@@ -63,7 +64,7 @@ class SmsWeb {
   /**
    * Auth
    * Saves the API key and account for use in other methods.
-   * @param {object} credentials
+   * @param {Object} credentials
    */
   auth(credentials) {
     if (_.isObjectLike(credentials)) {
@@ -90,14 +91,13 @@ class SmsWeb {
   /**
    * SendSingle
    * Send SMS to a single recipient.
-   * @param {object} options
-   * @param {function} callback
+   * @param {Object} options
+   * @param {Function} callback
    * @callback(error)
    */
   sendSingle(options = {}, callback) {
     if (!this.authorized()) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized));
-      throw new Error(this.messages.unauthorized);
+      return callbackHandler(callback, [this.messages.unauthorized]);
     }
 
     const defaultOptions = {
@@ -111,14 +111,12 @@ class SmsWeb {
 
     // Check if options has a recipient.
     if (!options.recipient) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.recipient));
-      throw new Error(this.messages.sendSingle.recipient);
+      return callbackHandler(callback, [this.messages.sendSingle.recipient]);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.message));
-      throw new Error(this.messages.sendSingle.message);
+      return callbackHandler(callback, [this.messages.sendSingle.message]);
     }
 
     const request = require('request');
@@ -140,35 +138,31 @@ class SmsWeb {
       json: true
     }, (err, response, body) => {
       if (err) {
-        if (_.isFunction(callback)) return callback(new Error(err));
-        throw new Error(err);
+        return callbackHandler(callback, [err]);
       }
 
       if (response.statusCode === 401) {
-        if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials));
-        throw new Error(this.messages.wrongCredentials);
+        return callbackHandler(callback, [this.messages.wrongCredentials]);
       }
 
       if (response.statusCode !== 200) {
-        if (_.isFunction(callback)) return callback(new Error(this.messages.sendSingle.smsFailed));
-        throw new Error(this.messages.sendSingle.smsFailed);
+        return callbackHandler(callback, [this.messages.sendSingle.smsFailed]);
       }
 
-      if (_.isFunction(callback)) return callback(null);
+      return callbackHandler(callback, [null]);
     });
   };
 
   /**
    * SendBulk
    * Send bulk SMS to many recipients.
-   * @param {object} options
-   * @param {function} callback
+   * @param {Object} options
+   * @param {Function} callback
    * @callback(error, shipmentId)
    */
   sendBulk(options = {}, callback) {
     if (!this.authorized()) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized), null);
-      throw new Error(this.messages.unauthorized);
+      return callbackHandler(callback, [this.messages.unauthorized, null]);
     }
 
     const defaultOptions = {
@@ -191,14 +185,12 @@ class SmsWeb {
 
     // Check if options has recipients.
     if (!options.recipients.length) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.recipients), null);
-      throw new Error(this.messages.sendBulk.recipients);
+      return callbackHandler(callback, [this.messages.sendBulk.recipients, null]);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.message), null);
-      throw new Error(this.messages.sendBulk.message);
+      return callbackHandler(callback, [this.messages.sendBulk.message, null]);
     }
 
     const request = require("request");
@@ -224,42 +216,36 @@ class SmsWeb {
       json: true
     }, (err, response, body) => {
       if (err) {
-        if (_.isFunction(callback)) return callback(new Error(err), null);
-        throw new Error(err);
+        return callbackHandler(callback, [err, null]);
       }
 
       if (response.statusCode === 401) {
-        if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials), null);
-        throw new Error(this.messages.wrongCredentials);
+        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
       }
 
       if (response.statusCode !== 200) {
-        if (_.isFunction(callback)) return callback(new Error(this.messages.sendBulk.smsFailed), null);
-        throw new Error(this.messages.sendBulk.smsFailed);
+        return callbackHandler(callback, [this.messages.sendBulk.smsFailed, null]);
       }
 
-      if (_.isFunction(callback)) return callback(null, body.ShipmentId);
+      return callbackHandler(callback, [null, body.ShipmentId]);
     });
-
   };
 
   /**
    * GetShipment
    * Returns information about a shipment
-   * @param {string} shipmentId
-   * @param {function} callback
+   * @param {String} shipmentId
+   * @param {Function} callback
    * @callback(error, shipmentData)
    */
   getShipment(shipmentId, callback) {
     if (!this.authorized()) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.unauthorized), null);
-      throw new Error(this.messages.unauthorized);
+      return callbackHandler(callback, [this.messages.unauthorized, null]);
     }
 
     // Check if call has an shipment ID.
     if (!_.isString(shipmentId)) {
-      if (_.isFunction(callback)) return callback(new Error(this.messages.getShipment.shipmentId), null);
-      throw new Error(this.messages.getShipment.shipmentId);
+      return callbackHandler(callback, [this.messages.getShipment.shipmentId, null]);
     }
 
     const request = require('request');
@@ -274,28 +260,23 @@ class SmsWeb {
         'x-bdn-key': this.apiKey,
       }
     }, (err, response, body) => {
-      if (_.isFunction(callback)) {
-        if (err) {
-          if (_.isFunction(callback)) return callback(new Error(err), null);
-          throw new Error(err, null);
-        }
-
-        if (response.statusCode === 401) {
-          if (_.isFunction(callback)) return callback(new Error(this.messages.wrongCredentials), null);
-          throw new Error(this.messages.wrongCredentials);
-        }
-
-        if (_.isFunction(callback)) return callback(null, body);
+      if (err) {
+        return callbackHandler(callback, [err, null]);
       }
-    });
 
+      if (response.statusCode === 401) {
+        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+      }
+
+      return callbackHandler(callback, [null, body]);
+    });
   }
 
   /**
    * Authorized
    * Returns if API key and account has been set.
    * @private
-   * @return {boolean}
+   * @return {Boolean}
    */
   authorized() {
     return !!(this.apiKey && this.apiAccount);
@@ -305,8 +286,8 @@ class SmsWeb {
    * MergeOptions
    * Merges the default options with options sent with the method.
    * @private
-   * @param {object} defaultOptions
-   * @param {object} options
+   * @param {Object} defaultOptions
+   * @param {Object} options
    * @return {Object}
    */
   mergeOptions(defaultOptions = {}, options = {}) {
