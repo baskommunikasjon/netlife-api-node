@@ -30,7 +30,7 @@
  */
 
 const _ = require('lodash');
-const callbackHandler = require('../lib/callback-handler');
+const callbacks = require('../helper/callbacks');
 
 
 class hqPublic {
@@ -104,11 +104,11 @@ class hqPublic {
    */
   getContactsByEmail(email, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized, null]);
+      return callbacks(callback, [this.messages.unauthorized, null]);
     }
 
     if (!_.isString(email)) {
-      return callbackHandler(callback, [this.messages.getContactsByEmail.email, null]);
+      return callbacks(callback, [this.messages.getContactsByEmail.email, null]);
     }
 
     const request = require('request');
@@ -124,14 +124,14 @@ class hqPublic {
       }
     }, (err, response, body) => {
       if (err) {
-        return callbackHandler(callback, [err, null]);
+        return callbacks(callback, [err, null]);
       }
 
       if (response.statusCode === 401) {
-        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+        return callbacks(callback, [this.messages.wrongCredentials, null]);
       }
 
-      return callbackHandler(callback, [null, JSON.parse(body)]);
+      return callbacks(callback, [null, JSON.parse(body)]);
     });
 
   }
@@ -145,12 +145,12 @@ class hqPublic {
    */
   getContactsByMobile(mobile, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized, null]);
+      return callbacks(callback, [this.messages.unauthorized, null]);
     }
 
     // Well accept the number or string as type of `mobile`
     if (!_.isString(mobile) && !_.isNumber(mobile)) {
-      return callbackHandler(callback, [this.messages.getContactsByMobile.mobile, null]);
+      return callbacks(callback, [this.messages.getContactsByMobile.mobile, null]);
     }
 
     const request = require('request');
@@ -166,14 +166,14 @@ class hqPublic {
       }
     }, (err, response, body) => {
       if (err) {
-        return callbackHandler(callback, [err, null]);
+        return callbacks(callback, [err, null]);
       }
 
       if (response.statusCode === 401) {
-        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+        return callbacks(callback, [this.messages.wrongCredentials, null]);
       }
 
-      return callbackHandler(callback, [null, JSON.parse(body)]);
+      return callbacks(callback, [null, JSON.parse(body)]);
     });
 
   }
@@ -241,26 +241,26 @@ class hqPublic {
    */
   updateContact(contactObject, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized]);
+      return callbacks(callback, [this.messages.unauthorized]);
     }
 
     // We'll only accept object for `contactObject`
     if (!_.isObjectLike(contactObject)) {
-      return callbackHandler(callback, [this.messages.updateContact.contactObject]);
+      return callbacks(callback, [this.messages.updateContact.contactObject]);
     }
 
     if (_.isUndefined(contactObject.contactId) || _.isNull(contactObject.contactId) || contactObject.contactId === 0) {
-      return callbackHandler(callback, [this.messages.updateContact.contactId]);
+      return callbacks(callback, [this.messages.updateContact.contactId]);
     }
 
     this.getContactByContactId(contactObject.contactId, (err, contact) => {
       if (err) {
-        return callbackHandler(callback, [err]);
+        return callbacks(callback, [err]);
       }
 
       //TODO: Here goes the update PUT request.
 
-      return callbackHandler(callback, [null]);
+      return callbacks(callback, [null]);
     });
   }
 

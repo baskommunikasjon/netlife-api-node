@@ -30,7 +30,7 @@
  */
 
 const _ = require('lodash');
-const callbackHandler = require('../lib/callback-handler');
+const callbacks = require('../helper/callbacks');
 
 class SmsWeb {
 
@@ -97,7 +97,7 @@ class SmsWeb {
    */
   sendSingle(options = {}, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized]);
+      return callbacks(callback, [this.messages.unauthorized]);
     }
 
     const defaultOptions = {
@@ -111,12 +111,12 @@ class SmsWeb {
 
     // Check if options has a recipient.
     if (!options.recipient) {
-      return callbackHandler(callback, [this.messages.sendSingle.recipient]);
+      return callbacks(callback, [this.messages.sendSingle.recipient]);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      return callbackHandler(callback, [this.messages.sendSingle.message]);
+      return callbacks(callback, [this.messages.sendSingle.message]);
     }
 
     const request = require('request');
@@ -138,18 +138,18 @@ class SmsWeb {
       json: true
     }, (err, response, body) => {
       if (err) {
-        return callbackHandler(callback, [err]);
+        return callbacks(callback, [err]);
       }
 
       if (response.statusCode === 401) {
-        return callbackHandler(callback, [this.messages.wrongCredentials]);
+        return callbacks(callback, [this.messages.wrongCredentials]);
       }
 
       if (response.statusCode !== 200) {
-        return callbackHandler(callback, [this.messages.sendSingle.smsFailed]);
+        return callbacks(callback, [this.messages.sendSingle.smsFailed]);
       }
 
-      return callbackHandler(callback, [null]);
+      return callbacks(callback, [null]);
     });
   };
 
@@ -162,7 +162,7 @@ class SmsWeb {
    */
   sendBulk(options = {}, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized, null]);
+      return callbacks(callback, [this.messages.unauthorized, null]);
     }
 
     const defaultOptions = {
@@ -185,12 +185,12 @@ class SmsWeb {
 
     // Check if options has recipients.
     if (!options.recipients.length) {
-      return callbackHandler(callback, [this.messages.sendBulk.recipients, null]);
+      return callbacks(callback, [this.messages.sendBulk.recipients, null]);
     }
 
     // Check if options has a message.
     if (!options.message) {
-      return callbackHandler(callback, [this.messages.sendBulk.message, null]);
+      return callbacks(callback, [this.messages.sendBulk.message, null]);
     }
 
     const request = require("request");
@@ -216,18 +216,18 @@ class SmsWeb {
       json: true
     }, (err, response, body) => {
       if (err) {
-        return callbackHandler(callback, [err, null]);
+        return callbacks(callback, [err, null]);
       }
 
       if (response.statusCode === 401) {
-        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+        return callbacks(callback, [this.messages.wrongCredentials, null]);
       }
 
       if (response.statusCode !== 200) {
-        return callbackHandler(callback, [this.messages.sendBulk.smsFailed, null]);
+        return callbacks(callback, [this.messages.sendBulk.smsFailed, null]);
       }
 
-      return callbackHandler(callback, [null, body.ShipmentId]);
+      return callbacks(callback, [null, body.ShipmentId]);
     });
   };
 
@@ -240,12 +240,12 @@ class SmsWeb {
    */
   getShipment(shipmentId, callback) {
     if (!this.authorized()) {
-      return callbackHandler(callback, [this.messages.unauthorized, null]);
+      return callbacks(callback, [this.messages.unauthorized, null]);
     }
 
     // Check if call has an shipment ID.
     if (!_.isString(shipmentId)) {
-      return callbackHandler(callback, [this.messages.getShipment.shipmentId, null]);
+      return callbacks(callback, [this.messages.getShipment.shipmentId, null]);
     }
 
     const request = require('request');
@@ -261,14 +261,14 @@ class SmsWeb {
       }
     }, (err, response, body) => {
       if (err) {
-        return callbackHandler(callback, [err, null]);
+        return callbacks(callback, [err, null]);
       }
 
       if (response.statusCode === 401) {
-        return callbackHandler(callback, [this.messages.wrongCredentials, null]);
+        return callbacks(callback, [this.messages.wrongCredentials, null]);
       }
 
-      return callbackHandler(callback, [null, body]);
+      return callbacks(callback, [null, body]);
     });
   }
 
