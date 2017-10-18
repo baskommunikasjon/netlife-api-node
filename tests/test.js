@@ -1,13 +1,14 @@
 // Init environment variables
 require('dotenv').config();
+const _ = require('lodash');
 
-const netlife = require('../index');
+const netlife = require('../lib/index');
 
 // netlife.sms.auth({
-//   apiKey: process.env.BDN_KEY,
-//   apiAccount: process.env.BDN_ACCOUNT,
+//   apiKey: process.env.SMS_BDN_KEY,
+//   apiAccount: process.env.SMS_BDN_ACCOUNT
 // });
-
+//
 // netlife.sms.sendSingle({
 //   recipient: '+4795033467',
 //   from: 'Netlife',
@@ -50,6 +51,7 @@ netlife.hqpublic.auth({
 //     return console.error(err);
 //   }
 //   console.log(contacts);
+//
 // });
 
 // netlife.hqpublic.getContactsByMobile('12345678', (err, contacts) => {
@@ -59,10 +61,22 @@ netlife.hqpublic.auth({
 //   console.log(contacts);
 // });
 
-netlife.hqpublic.getContactByContactId(11936, (err, contact) => {
+// netlife.hqpublic.getContactByContactId(214, (err, contact) => {
+//   if (err) {
+//     return console.error(err);
+//   }
+//
+//   console.log(contact)
+// });
+
+
+netlife.hqpublic.updateContact({
+  contactId: 214,
+}, (err) => {
   if (err) {
     return console.error(err);
   }
-
-  console.log(contact)
 });
+
+
+//Todo: Create Request handler
