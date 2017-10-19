@@ -54,7 +54,7 @@ netlife.sms.sendSingle({
 ## Send bulk SMS
 Method accepts `options`-object and `callback`.
 ```js
-bdnAPI.sms.sendBulk({
+netlife.sms.sendBulk({
   recipients: ['+4712345678', '+4787654321'],
   from: 'Netlife',
   message: 'This is my SMS text.',
