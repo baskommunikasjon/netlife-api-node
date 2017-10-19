@@ -13,9 +13,7 @@ require('dotenv').config();
 // a mandatory option for test.
 const args = require('cli.args')(['case:!']);
 
-const caseList = {
-  sms: './cases/sms',
-};
+const caseList = require('./case-list');
 
 describe('API', function () {
   switch (args['case']) {

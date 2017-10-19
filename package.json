@@ -4,7 +4,8 @@
   "description": "A simple to use package for Netlifes many API end-points.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha tests/start.js --case all"
+    "test-all": "mocha tests/test-all.js",
+    "test-case": "mocha tests/test-case.js --case sms"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "cli.args": "0.0.7",
     "dotenv": "^4.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^4.0.1"
   }
 }
