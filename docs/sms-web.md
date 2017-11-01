@@ -1,16 +1,15 @@
 # SMS API
-Uses to programmatically send SMS.
+Used to programmatically send SMS.
 
 Background documentation can be [obtained here](https://secure.bringcrm.no/api/sms/v1).
 
 ## Methods
 - [Authorization](#authorization)
 - Send SMS
-  - [Send single SMS](#send-single-sms)
-  - [Send bulk SMS](#send-bulk-sms)
-  - [Get contact by contactId](#get-contact-by-contactid)
+  - [Send single](#sms---send-single)
+  - [Send bulk SMS](#sms---send-bulk)
 - Reports
-  - [Get shipment](#get-shipment)
+  - [Get shipment](#reports---get-shipment)
 
 ---
 
@@ -26,7 +25,11 @@ netlife.sms.auth({
 });
 ```
 
-## Send single SMS
+[Back to top](#methods)
+
+---
+
+## SMS - Send single
 Method accepts `options`-object and `callback`.
 ```js
 netlife.sms.sendSingle({
@@ -50,8 +53,11 @@ netlife.sms.sendSingle({
 | `from`      | String | `2262`  | Alphanumeric sender name [0-9] [A-Z]. Sender name does not support whitespace. |
 | `message`   | String | `null`  | The text message to send.                                                      |
 
+[Back to top](#methods)
 
-## Send bulk SMS
+---
+
+## SMS - Send bulk
 Method accepts `options`-object and `callback`.
 ```js
 netlife.sms.sendBulk({
@@ -78,9 +84,17 @@ netlife.sms.sendBulk({
 | `removeDuplicates` | Boolean   | `true`                 | Whether to remove duplicate recipients. If set to `false` a recipient may get the SMS more then once.                              |
 
 
-## Get shipment
+[Back to top](#methods)
+
+---
+
+## Reports - Get shipment
 ```js
 netlife.sms.getShipment(shipmentId, (data) => {
   console.log(data);
 });
 ```
+
+[Back to top](#methods)
+
+---
