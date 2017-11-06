@@ -1,10 +1,11 @@
 {
   "name": "netlife-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple to use package for Netlifes many API end-points.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "node test.js"
+    "test-all": "mocha tests/test-all.js",
+    "test-case": "mocha tests/test-case.js --case sms"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,13 @@
   },
   "homepage": "https://github.com/netlifedialog/netlife-api-node#readme",
   "dependencies": {
-    "request": "^2.81.0"
+    "lodash": "^4.17.4",
+    "request": "^2.83.0"
   },
   "devDependencies": {
-    "dotenv": "^4.0.0"
+    "cli.args": "0.0.7",
+    "dotenv": "^4.0.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1"
   }
 }
