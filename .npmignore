@@ -1,2 +1,4 @@
 # The user don't need our filthy tests - Ignore it
-/tests
+tests/
+.env
+.idea/
