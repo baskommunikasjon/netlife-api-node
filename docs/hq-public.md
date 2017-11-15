@@ -105,6 +105,16 @@ Method accepts `contactId`, `contactFields` and `callback`.
 netlife.hqpublic.updateContact(214, {
     Firstname: 'Henrik',
     Gender: 'M',
+    Addresses: [{
+      AddressTypeId: 4,
+      Address: 'Drammensveien 145 A',
+      City: 'Oslo',
+      ExtraFields: [{
+        Key: 'Land',
+        Id: 0,
+        Value: "Norge",
+      }],
+    }],
     ExtraFields: [{
       Key: 'SomeKey',  // The main-key of the extra field
       Id: 1,           // The value ID of the extra field
