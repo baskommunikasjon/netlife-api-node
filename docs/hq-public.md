@@ -110,9 +110,9 @@ netlife.hqpublic.updateContact(214, {
       Address: 'Drammensveien 145 A',
       City: 'Oslo',
       ExtraFields: [{
-        Key: 'Land',
-        Id: 0,
-        Value: "Norge",
+        Key: 'Land',    // The main-key of the extra field
+        Id: 0,          // The value ID of the extra field
+        Value: "Norge", // The value of the extra field
       }],
     }],
     ExtraFields: [{
