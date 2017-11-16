@@ -135,7 +135,7 @@ netlife.hqpublic.updateContact(214, {
 |-----------------|----------|----------------------------------------------------------------------------------------------|
 | `contactId `    | String   | Contacts ID.                                                                                 |
 | `contactFields` | Object   | Object containing of the contact fields you want to edit. See contact fields in table below. |
-| `callback`      | Function | A callback function. Returns `error` and `contact `.                                         |
+| `callback`      | Function | A callback function. Returns `error` and `updatedId`.                                         |
 
 <br/>
 
