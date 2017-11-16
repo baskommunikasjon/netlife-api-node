@@ -10,7 +10,9 @@ Background documentation can be [obtained here](https://api.bringcrm.no/hqpublic
   - [Get by mobile](#contatcs---get-by-mobile)
   - [Get by contactId](#contatcs---get-by-contactid)
   - [Update](#contatcs---update)
-
+  - [Create](#contatcs---create)
+- Marketing Automation
+  - [Post Event](#marketing-automation---post-event)
 
 ---
 
@@ -174,6 +176,102 @@ netlife.hqpublic.updateContact(214, {
 | `ChangedByUser`    | String    |                                         |
 | `Source`           | String    |                                         |
 | `ExtraFields`      | Array     | See example above.                      |
+
+[Back to top](#methods)
+
+---
+
+## Contatcs - Create
+Method accepts `contactFields` and `callback`.
+
+```js
+netlife.hqpublic.createContact({
+  ContactStatusId: 1,
+  ContactTypeId: 2,
+  FirstName: 'Henrik',
+  LastName: 'Gundersen',
+  ExtraFields: [
+    {
+      Key: 'Ankomst',
+      Id: 2,
+    },
+    {
+      Key: 'Firma',
+      Value: 'Netlife Dialog'
+    }
+  ],
+  ReqExtraFields: [  // Used for ExtraFields that is required on creation
+    {
+      Key: "DK år",
+      DomainSchemaFieldType: 2,
+      Options: [],
+      Values: [
+        {
+          Id: 4,
+          Fields: [
+            {
+              Key: "Description",
+              Value: "DK 2018",
+              Type: "System.String"
+            }
+          ]
+        }
+      ]
+    },
+  ]
+}, (err, newContactId) => {
+  if (err) {
+    return console.error(err);
+  }
+
+  console.log(newContactId);
+
+});
+```
+
+| Property        | Type     | Details                                                                                                                              |
+|-----------------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `contactFields` | Object   | Object containing of the contact fields you want to edit. See contact fields in table under [Contacts - Update](#contatcs---update). |
+| `callback`      | Function | A callback function. Returns `error` and `newContactId`.                                                                             |
+
+<br/>
+
+[Back to top](#methods)
+
+---
+
+## Marketing Automation - Post Event
+Method accepts `options` and `callback`.
+
+```js
+netlife.hqpublic.postEvent({
+  eventTypeName: 'CWACONTACTADDED',
+  description: '',
+  customerId: '13586',
+}, (err) => {
+  if (err) {
+    return console.error(err);
+  }
+
+  console.log('Event posted!');
+});
+```
+
+| Property        | Type     | Details                               |
+|-----------------|----------|---------------------------------------|
+| `options`       | Object   | Object containing of the options      |
+| `callback`      | Function | A callback function. Returns `error`. |
+
+<br/>
+
+*Options properties:*
+
+| Property        | Type   | Default | Details                                                                                |
+|-----------------|--------|---------|----------------------------------------------------------------------------------------|
+| `eventTypeName` | String | `null`  | Name of the event type as a string. (Ex. `'CWACONTACTADDED'` or `'CWACONTACTUPDATED'`) |
+| `description`   | String | `''`    | Description of event.                                                                  |
+| `customerId`    | String | `null`  | CustomerId of the customer the event is about.                                         |
+| `context`       | String | `0`     |                                                                                        |
 
 [Back to top](#methods)
 
