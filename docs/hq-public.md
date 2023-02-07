@@ -1,23 +1,27 @@
 # HQ-Public API
+
 Used to access and modify customer data in HQ
 
-Background documentation can be [obtained here](https://api.bringcrm.no/hqpublic/v1).
+Background documentation can be [obtained here](https://api.bas.no/hqpublic/v1).
 
 ## Methods
-- [Authorization](#authorization)
-- Contacts
-  - [Get by email](#contatcs---get-by-email)
-  - [Get by mobile](#contatcs---get-by-mobile)
-  - [Get by contactId](#contatcs---get-by-contactid)
-  - [Update](#contatcs---update)
-  - [Create](#contatcs---create)
-- Marketing Automation
-  - [Post Event](#marketing-automation---post-event)
+
+- [HQ-Public API](#hq-public-api)
+  - [Methods](#methods)
+  - [Authorization](#authorization)
+  - [Contatcs - Get by email](#contatcs---get-by-email)
+  - [Contatcs - Get by mobile](#contatcs---get-by-mobile)
+  - [Contatcs - Get by contactId](#contatcs---get-by-contactid)
+  - [Contatcs - Update](#contatcs---update)
+  - [Contatcs - Create](#contatcs---create)
+  - [Marketing Automation - Post Event](#marketing-automation---post-event)
 
 ---
 
 ## Authorization
+
 You have to authorize before using any other methods in this API.
+
 ```js
 const netlife = require('netlife-api');
 
@@ -33,6 +37,7 @@ netlife.hqpublic.auth({
 ---
 
 ## Contatcs - Get by email
+
 Method accepts `email` and `callback`.
 
 ```js
@@ -40,7 +45,7 @@ netlife.hqpublic.getContactsByEmail('henrik.gundersen@netlife.com', (err, contac
   if (err) {
     return console.error(err);
   }
-  
+
   console.log(contacts);
   // => Array of objects containing contacts matching the email.
 });
@@ -48,14 +53,15 @@ netlife.hqpublic.getContactsByEmail('henrik.gundersen@netlife.com', (err, contac
 
 | Property   | Type     | Details                                               |
 |------------|----------|-------------------------------------------------------|
-| `email `   | String   | Contacts e-mail address.                              |
-| `callback` | Function | A callback function. Returns `error` and `contacts `. |
+| `email`   | String   | Contacts e-mail address.                              |
+| `callback` | Function | A callback function. Returns `error` and `contacts`. |
 
 [Back to top](#methods)
 
 ---
 
 ## Contatcs - Get by mobile
+
 Method accepts `mobile` and `callback`.
 
 ```js
@@ -70,14 +76,15 @@ netlife.hqpublic.getContactsByMobile('12345678', (err, contacts) => {
 
 | Property   | Type     | Details                                               |
 |------------|----------|-------------------------------------------------------|
-| `mobile `  | String   | Contacts mobile number.                               |
-| `callback` | Function | A callback function. Returns `error` and `contacts `. |
+| `mobile`  | String   | Contacts mobile number.                               |
+| `callback` | Function | A callback function. Returns `error` and `contacts`. |
 
 [Back to top](#methods)
 
 ---
 
 ## Contatcs - Get by contactId
+
 Method accepts `contactId` and `callback`.
 
 ```js
@@ -93,14 +100,15 @@ netlife.hqpublic.getContactByContactId(11936, (err, contact) => {
 
 | Property     | Type     | Details                                              |
 |--------------|----------|------------------------------------------------------|
-| `contactId ` | String   | Contacts ID.                                         |
-| `callback`   | Function | A callback function. Returns `error` and `contact `. |
+| `contactId` | String   | Contacts ID.                                         |
+| `callback`   | Function | A callback function. Returns `error` and `contact`. |
 
 [Back to top](#methods)
 
 ---
 
 ## Contatcs - Update
+
 Method accepts `contactId`, `contactFields` and `callback`.
 
 ```js
@@ -126,7 +134,7 @@ netlife.hqpublic.updateContact(214, {
     if (err) {
       return console.error(err);
     }
-    
+
     console.log(updatedId);
     // => '214' - The ID of the updated contact
   }
@@ -135,7 +143,7 @@ netlife.hqpublic.updateContact(214, {
 
 | Property        | Type     | Details                                                                                      |
 |-----------------|----------|----------------------------------------------------------------------------------------------|
-| `contactId `    | String   | Contacts ID.                                                                                 |
+| `contactId`    | String   | Contacts ID.                                                                                 |
 | `contactFields` | Object   | Object containing of the contact fields you want to edit. See contact fields in table below. |
 | `callback`      | Function | A callback function. Returns `error` and `updatedId`.                                         |
 
@@ -145,7 +153,7 @@ netlife.hqpublic.updateContact(214, {
 
 | Field              | Type      | Details                                 |
 |--------------------|-----------|-----------------------------------------|
-| `ContactStatusId ` | Number    |                                         |
+| `ContactStatusId` | Number    |                                         |
 | `ContactTypeId`    | Number    | Explanation will be added soon.         |
 | `CompanyId`        | Number    |                                         |
 | `ContactRoleId`    | Number    | Explanation will be added soon.         |
@@ -182,6 +190,7 @@ netlife.hqpublic.updateContact(214, {
 ---
 
 ## Contatcs - Create
+
 Method accepts `contactFields` and `callback`.
 
 ```js
@@ -241,6 +250,7 @@ netlife.hqpublic.createContact({
 ---
 
 ## Marketing Automation - Post Event
+
 Method accepts `options` and `callback`.
 
 ```js
